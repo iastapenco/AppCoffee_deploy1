@@ -84,6 +84,11 @@ const specs = swaggerJSDoc(swaggerOptions);
 
 app.use(express.json());
 app.use(cors(corsOptions));
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", req.headers.origin);
+  res.header("Access-Control-Allow-Credentials", "true");
+  next();
+});
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser(process.env.SIGNED_COOKIES));
 app.use(
