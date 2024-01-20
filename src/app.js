@@ -1,5 +1,6 @@
 import "dotenv/config";
 import express from "express";
+import cors from "cors";
 import multer from "multer";
 import productRouter from "./routes/products.routes.js";
 import viewRouter from "./routes/view.routes.js";
@@ -23,6 +24,16 @@ import nodemailer from "nodemailer";
 import { addLogger } from "./config/logger.js";
 import swaggerJSDoc from "swagger-jsdoc";
 import swaggerUiExpress from "swagger-ui-express";
+
+const whiteList = ["http://localhost:5173"];
+
+const corsOptions = {
+  origin: function (origin, callback) {
+    if (whiteList.indexOf(origin != -1 || !origin)) {
+      callback(null, true);
+    } else new Error("Acceso denegado");
+  },
+};
 
 const PORT = 8080;
 const app = express();
@@ -74,6 +85,7 @@ const server = app.listen(PORT, () => {
 const specs = swaggerJSDoc(swaggerOptions);
 
 app.use(express.json());
+app.use(cors(corsOptions));
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser(process.env.SIGNED_COOKIES));
 app.use(
@@ -95,9 +107,6 @@ initalizePassport();
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.engine("handlebars", engine());
-app.set("view engine", "handlebars");
-app.set("views", path.resolve(__dirname, "./views"));
 const upload = multer({ storage: storage });
 app.use("/static", express.static(path.join(__dirname, "/public")));
 const io = new Server(server);
