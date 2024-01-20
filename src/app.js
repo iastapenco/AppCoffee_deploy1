@@ -7,7 +7,6 @@ import cartRouter from "./routes/carts.routes.js";
 import userRouter from "./routes/users.routes.js";
 import sessionRouter from "./routes/session.routes.js";
 import loggerRouter from "./routes/logger.routes.js";
-import { engine } from "express-handlebars";
 import { __dirname } from "./path.js";
 import { Server } from "socket.io";
 import path from "path";
