@@ -43,7 +43,7 @@ sessionRouter.post(
 
       const token = generateToken(req.user);
 
-      res.status(200).send({ token });
+      res.status(200).send({ payload: req.user, token });
     } catch (error) {
       return res
         .status(500)
