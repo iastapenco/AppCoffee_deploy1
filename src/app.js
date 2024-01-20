@@ -23,7 +23,7 @@ import { addLogger } from "./config/logger.js";
 import swaggerJSDoc from "swagger-jsdoc";
 import swaggerUiExpress from "swagger-ui-express";
 
-const whiteList = ["https://coffeeshoponline.onrender.com/"];
+const whiteList = ["https://coffeeshoponline.onrender.com"];
 
 const corsOptions = {
   origin: function (origin, callback) {
