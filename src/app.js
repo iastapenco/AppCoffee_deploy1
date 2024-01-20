@@ -3,7 +3,6 @@ import express from "express";
 import cors from "cors";
 import multer from "multer";
 import productRouter from "./routes/products.routes.js";
-import viewRouter from "./routes/view.routes.js";
 import cartRouter from "./routes/carts.routes.js";
 import userRouter from "./routes/users.routes.js";
 import sessionRouter from "./routes/session.routes.js";
