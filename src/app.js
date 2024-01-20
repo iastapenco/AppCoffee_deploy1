@@ -136,7 +136,6 @@ io.on("connection", (socket) => {
 
 app.use("/api/products", productRouter);
 app.use("/api/carts", cartRouter);
-app.use("/", viewRouter);
 app.use("/api/users", userRouter);
 app.use("/api/sessions", sessionRouter);
 app.use("/loggerTest", loggerRouter);
