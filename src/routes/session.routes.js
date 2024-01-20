@@ -42,11 +42,8 @@ sessionRouter.post(
       };
 
       const token = generateToken(req.user);
-      res.cookie("jwtCookie", token, {
-        maxAge: 43200000,
-      });
 
-      res.status(200).send({ payload: req.user });
+      res.status(200).send({ token });
     } catch (error) {
       return res
         .status(500)
