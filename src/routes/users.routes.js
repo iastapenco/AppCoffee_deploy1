@@ -3,7 +3,7 @@ import crypto from "crypto";
 import { sendRecoveryMail } from "../config/nodemailer.js";
 import UserManager from "../dao/managers_mongo/userManagerMongo.js";
 import multer from "multer";
-import { passportError, authorization } from "../utils/messagesError.js";
+import nodemailer from "nodemailer";
 
 const userRouter = Router();
 const recoveryLinks = {};
@@ -120,6 +120,52 @@ userRouter.put("/:id", async (req, res) => {
         .send({ response: "Error", mensaje: "Usuario no encontrado" });
   } catch (error) {
     res.status(400).send({ response: "Error", mensaje: error });
+  }
+});
+
+userRouter.delete("/", async (req, res) => {
+  const now = Date.now();
+
+  const twoDaysAgo = now - 2 * 24 * 60 * 60 * 1000;
+
+  const usersToDelete = await userManager.findUserByLastConnection(twoDaysAgo);
+  try {
+    if (usersToDelete.length > 0) {
+      let transporter = nodemailer.createTransport({
+        host: "smtp.gmail.com",
+        port: 465,
+        secure: true,
+        auth: {
+          user: "profematetoledo2@gmail.com",
+          pass: process.env.PASSWORD_EMAIL,
+          authMethod: "LOGIN",
+        },
+      });
+
+      for (const user of usersToDelete) {
+        let mailOptions = {
+          from: "profematetoledo2@gmail.com",
+          to: user.email,
+          subject: "Su cuenta fue eliminada",
+          text: "Su cuenta fue eliminada por inactividad",
+        };
+
+        try {
+          await transporter.sendMail(mailOptions);
+          await userManager.deleteUserById(user._id);
+        } catch (error) {
+          console.error(
+            `Error al eliminar el usuario con _id: ${user._id}`,
+            error
+          );
+        }
+      }
+      res.status(200).send("Usuarios eliminados correctamente");
+    } else {
+      res.status(404).send("no hay usuarios para eliminar");
+    }
+  } catch (error) {
+    res.status(400).send({ mensaje: error });
   }
 });
 

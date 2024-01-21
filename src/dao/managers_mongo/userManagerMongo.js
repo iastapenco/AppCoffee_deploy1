@@ -16,6 +16,16 @@ class UserManager {
     return user;
   }
 
+  async findUserByLastConnection(time) {
+    const usersToDelete = await userModel.find({
+      last_connection: { $gte: time },
+    });
+    if (!usersToDelete) {
+      throw new Error("No hay usuarios para eliminar");
+    }
+    return usersToDelete;
+  }
+
   //Método para crear un usuario
   async createUser(first_name, last_name, age, email, password) {
     const newUser = await userModel.create({
