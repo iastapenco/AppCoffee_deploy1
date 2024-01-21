@@ -72,6 +72,7 @@ userRouter.get("/userslist", async (req, res) => {
       last_name: user.last_name,
       email: user.email,
       rol: user.rol,
+      _id: user._id,
     }));
     res.status(200).send({ response: "Ok", mensaje: usersList });
   } catch (error) {
