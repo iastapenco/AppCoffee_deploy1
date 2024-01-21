@@ -3,7 +3,7 @@ import crypto from "crypto";
 import { sendRecoveryMail } from "../config/nodemailer.js";
 import UserManager from "../dao/managers_mongo/userManagerMongo.js";
 import multer from "multer";
-import { error } from "console";
+import { passportError, authorization } from "../utils/messagesError.js";
 
 const userRouter = Router();
 const recoveryLinks = {};
@@ -72,6 +72,20 @@ userRouter.get("/", async (req, res) => {
     res.status(400).send({ response: "Error", mensaje: error });
   }
 });
+
+userRouter.get(
+  "/userslist",
+  passportError("jwt"),
+  authorization("admin"),
+  async (req, res) => {
+    try {
+      const users = await userManager.usersList();
+      res.status(200).send({ response: "Ok", mensaje: users });
+    } catch (error) {
+      res.status(400).send({ response: "Error", mensaje: error });
+    }
+  }
+);
 
 userRouter.get("/:id", async (req, res) => {
   try {
