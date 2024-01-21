@@ -18,7 +18,7 @@ class UserManager {
 
   async findUserByLastConnection(time) {
     const usersToDelete = await userModel.find({
-      last_connection: { $gte: time },
+      last_connection: { $lt: time },
     });
     if (!usersToDelete) {
       throw new Error("No hay usuarios para eliminar");
