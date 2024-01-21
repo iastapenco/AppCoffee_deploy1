@@ -67,9 +67,12 @@ userRouter.post("/reset-password/:token", (req, res) => {
 userRouter.get("/userslist", async (req, res) => {
   try {
     const users = await userManager.usersList();
-    const usersList = users.map((user) => {
-      user.first_name, user.last_name, user.email, user.rol;
-    });
+    const usersList = users.map((user) => ({
+      first_name: user.first_name,
+      last_name: user.last_name,
+      email: user.email,
+      rol: user.rol,
+    }));
     res.status(200).send({ response: "Ok", mensaje: usersList });
   } catch (error) {
     res.status(400).send({ response: "Error", mensaje: error });
