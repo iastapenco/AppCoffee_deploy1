@@ -64,19 +64,14 @@ userRouter.post("/reset-password/:token", (req, res) => {
   }
 });
 
-userRouter.get(
-  "/userslist",
-  passportError("jwt"),
-  authorization("admin"),
-  async (req, res) => {
-    try {
-      const users = await userManager.usersList();
-      res.status(200).send({ response: "Ok", mensaje: users });
-    } catch (error) {
-      res.status(400).send({ response: "Error", mensaje: error });
-    }
+userRouter.get("/userslist", async (req, res) => {
+  try {
+    const users = await userManager.usersList();
+    res.status(200).send({ response: "Ok", mensaje: users });
+  } catch (error) {
+    res.status(400).send({ response: "Error", mensaje: error });
   }
-);
+});
 
 userRouter.get("/", async (req, res) => {
   try {
