@@ -102,7 +102,7 @@ userRouter.get("/:id", async (req, res) => {
 
 userRouter.put("/:id", async (req, res) => {
   const { id } = req.params;
-  const { first_name, last_name, age, email, password } = req.body;
+  const { first_name, last_name, age, email, password, rol } = req.body;
   try {
     const user = await userManager.updateUserById(
       id,
@@ -110,7 +110,8 @@ userRouter.put("/:id", async (req, res) => {
       last_name,
       age,
       email,
-      password
+      password,
+      rol
     );
     if (user)
       res.status(200).send({ response: "Usuario actualizado", mensaje: user });
