@@ -4,6 +4,7 @@ import jwt from "passport-jwt";
 import passport from "passport";
 import { createHash, validatePassword } from "../utils/bcrypt.js";
 import { userModel } from "../dao/models/users.models.js";
+import { cartModel } from "../dao/models/carts.models.js";
 import "dotenv/config";
 
 const LocalStrategy = local.Strategy;
@@ -47,7 +48,8 @@ const initalizePassport = () => {
         usernameField: "email",
       },
       async (req, username, password, done) => {
-        const { first_name, last_name, email, age } = req.body;
+        const { first_name, last_name, email, age, rol, user_premium } =
+          req.body;
         try {
           const user = await userModel.findOne({ email: email });
 
@@ -55,12 +57,17 @@ const initalizePassport = () => {
             return done(null, false);
           }
           const passwordHash = createHash(password);
+          const newCart = await cartModel.create({});
+
           const userCreated = await userModel.create({
-            first_name: first_name,
-            last_name: last_name,
-            age: age,
-            email: email,
+            first_name,
+            last_name,
+            age,
+            email,
+            rol,
+            user_premium,
             password: passwordHash,
+            cart: newCart._id,
           });
 
           return done(null, userCreated);
