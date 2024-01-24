@@ -26,7 +26,13 @@ import swaggerUiExpress from "swagger-ui-express";
 const whiteList = ["https://coffeeshoponline.onrender.com"];
 
 const corsOptions = {
-  origin: "*",
+  origin: function (origin, callback) {
+    if (whiteList.indexOf(origin) != -1 || !origin) {
+      callback(null, true);
+    } else {
+      callback(new Error("Acceso denegado"));
+    }
+  },
 };
 
 const PORT = 8080;
