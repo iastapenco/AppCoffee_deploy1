@@ -4,6 +4,7 @@ import { sendRecoveryMail } from "../config/nodemailer.js";
 import UserManager from "../dao/managers_mongo/userManagerMongo.js";
 import multer from "multer";
 import nodemailer from "nodemailer";
+import { passportError, authorization } from "../utils/messagesError.js";
 
 const userRouter = Router();
 const recoveryLinks = {};
@@ -64,21 +65,26 @@ userRouter.post("/reset-password/:token", (req, res) => {
   }
 });
 
-userRouter.get("/userslist", async (req, res) => {
-  try {
-    const users = await userManager.usersList();
-    const usersList = users.map((user) => ({
-      first_name: user.first_name,
-      last_name: user.last_name,
-      email: user.email,
-      rol: user.rol,
-      _id: user._id,
-    }));
-    res.status(200).send({ response: "Ok", mensaje: usersList });
-  } catch (error) {
-    res.status(400).send({ response: "Error", mensaje: error });
+userRouter.get(
+  "/userslist",
+  passportError("jwt"),
+  authorization("admin"),
+  async (req, res) => {
+    try {
+      const users = await userManager.usersList();
+      const usersList = users.map((user) => ({
+        first_name: user.first_name,
+        last_name: user.last_name,
+        email: user.email,
+        rol: user.rol,
+        _id: user._id,
+      }));
+      res.status(200).send({ response: "Ok", mensaje: usersList });
+    } catch (error) {
+      res.status(400).send({ response: "Error", mensaje: error });
+    }
   }
-});
+);
 
 userRouter.get("/", async (req, res) => {
   try {
@@ -124,51 +130,58 @@ userRouter.put("/:id", async (req, res) => {
   }
 });
 
-userRouter.delete("/", async (req, res) => {
-  const now = Date.now();
+userRouter.delete(
+  "/",
+  passportError("jwt"),
+  authorization("admin"),
+  async (req, res) => {
+    const now = Date.now();
 
-  const twoDaysAgo = now - 2 * 24 * 60 * 60 * 1000;
+    const twoDaysAgo = now - 2 * 24 * 60 * 60 * 1000;
 
-  const usersToDelete = await userManager.findUserByLastConnection(twoDaysAgo);
-  try {
-    if (usersToDelete.length > 0) {
-      let transporter = nodemailer.createTransport({
-        host: "smtp.gmail.com",
-        port: 465,
-        secure: true,
-        auth: {
-          user: "profematetoledo2@gmail.com",
-          pass: process.env.PASSWORD_EMAIL,
-          authMethod: "LOGIN",
-        },
-      });
+    const usersToDelete = await userManager.findUserByLastConnection(
+      twoDaysAgo
+    );
+    try {
+      if (usersToDelete.length > 0) {
+        let transporter = nodemailer.createTransport({
+          host: "smtp.gmail.com",
+          port: 465,
+          secure: true,
+          auth: {
+            user: "profematetoledo2@gmail.com",
+            pass: process.env.PASSWORD_EMAIL,
+            authMethod: "LOGIN",
+          },
+        });
 
-      for (const user of usersToDelete) {
-        let mailOptions = {
-          from: "profematetoledo2@gmail.com",
-          to: user.email,
-          subject: "Su cuenta fue eliminada",
-          text: "Su cuenta fue eliminada por inactividad",
-        };
+        for (const user of usersToDelete) {
+          let mailOptions = {
+            from: "profematetoledo2@gmail.com",
+            to: user.email,
+            subject: "Su cuenta fue eliminada",
+            text: "Su cuenta fue eliminada por inactividad",
+          };
 
-        try {
-          await transporter.sendMail(mailOptions);
-          await userManager.deleteUserById(user._id);
-        } catch (error) {
-          console.error(
-            `Error al eliminar el usuario con _id: ${user._id}`,
-            error
-          );
+          try {
+            await transporter.sendMail(mailOptions);
+            await userManager.deleteUserById(user._id);
+          } catch (error) {
+            console.error(
+              `Error al eliminar el usuario con _id: ${user._id}`,
+              error
+            );
+          }
         }
+        res.status(200).send("Usuarios eliminados correctamente");
+      } else {
+        res.status(404).send("no hay usuarios para eliminar");
       }
-      res.status(200).send("Usuarios eliminados correctamente");
-    } else {
-      res.status(404).send("no hay usuarios para eliminar");
+    } catch (error) {
+      res.status(400).send({ mensaje: error });
     }
-  } catch (error) {
-    res.status(400).send({ mensaje: error });
   }
-});
+);
 
 userRouter.delete("/:id", async (req, res) => {
   try {

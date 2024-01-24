@@ -9,16 +9,6 @@ export const generateToken = (user) => {
   return token;
 };
 
-generateToken({
-  _id: "6518427aa6290402a6e76cf3",
-  first_name: "José",
-  last_name: "Péres",
-  age: "35",
-  email: "jose@jose.com",
-  password: "$2b$17$7ZfHNwNs/I/1TVmEfYkKFOzzkUJiUMmBCkSBlYRtE3DJ58K1j38mW",
-  rol: "user",
-});
-
 export const authToken = (req, res, next) => {
   const authHeader = req.headers.Authorization;
 
