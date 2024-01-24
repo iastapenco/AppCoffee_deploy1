@@ -18,7 +18,7 @@ export const authToken = (req, res, next) => {
 
   const token = authHeader.split(" ")[1];
 
-  jwt.sign(token, process.env.JWT_SECRET, (error, credential) => {
+  jwt.verify(token, process.env.JWT_SECRET, (error, credential) => {
     if (error) {
       return res
         .status(403)
