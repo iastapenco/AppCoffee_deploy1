@@ -72,14 +72,8 @@ userRouter.get(
   async (req, res) => {
     try {
       const users = await userManager.usersList();
-      const usersList = users.map((user) => ({
-        first_name: user.first_name,
-        last_name: user.last_name,
-        email: user.email,
-        rol: user.rol,
-        _id: user._id,
-      }));
-      res.status(200).send({ response: "Ok", mensaje: usersList });
+
+      res.status(200).send({ response: "Ok", mensaje: users });
     } catch (error) {
       res.status(400).send({ response: "Error", mensaje: error });
     }
