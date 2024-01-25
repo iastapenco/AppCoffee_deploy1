@@ -39,14 +39,19 @@ class UserManager {
   }
 
   //Método para actualizar usuario
-  async updateUserById(id, first_name, last_name, age, email, password) {
-    const user = await userModel.findByIdAndUpdate(id, {
-      first_name,
-      last_name,
-      age,
-      email,
-      password,
-    });
+  async updateUserById(id, first_name, last_name, age, email, password, rol) {
+    const user = await userModel.findByIdAndUpdate(
+      id,
+      {
+        first_name,
+        last_name,
+        age,
+        email,
+        password,
+        rol,
+      },
+      { new: true }
+    );
     return user;
   }
 
