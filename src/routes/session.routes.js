@@ -106,11 +106,11 @@ sessionRouter.post(
 );
 
 sessionRouter.post("/logout", async (req, res) => {
-  if (req.session) {
-    const user = await userModel.findById(req.session.passport.user);
-    if (!user) {
-      return res.status(404).send("Usuario no encontrado");
-    }
+  if (req.session.login) {
+    //const user = await userModel.findById(req.session.passport.user);
+    // if (!user) {
+    //   return res.status(404).send("Usuario no encontrado");
+    // }
 
     user.last_connection = Date.now();
     await user.save();
