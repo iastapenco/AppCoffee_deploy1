@@ -38,6 +38,9 @@ sessionRouter.post(
       const token = generateToken(req.user);
       res.cookie("jwtCookie", token, {
         maxAge: 43200000,
+        domain: ".https://coffeeshoponline.onrender.com/",
+        sameSite: "none",
+        secure: true,
       });
 
       res.status(200).send({ payload: req.user, token });
@@ -101,7 +104,7 @@ sessionRouter.post(
 
 sessionRouter.post("/logout", async (req, res) => {
   if (req.session) {
-    const user = await userModel.findById(req.user._id);
+    const user = await userModel.findById(req.user);
     if (!user) {
       return res.status(404).send("Usuario no encontrado");
     }
