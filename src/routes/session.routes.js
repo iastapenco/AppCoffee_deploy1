@@ -105,7 +105,7 @@ sessionRouter.post(
   }
 );
 
-sessionRouter.get("/logout", async (req, res) => {
+sessionRouter.post("/logout", async (req, res) => {
   if (req.session.user) {
     const user = await userModel.findById(req.session.passport.user);
     if (!user) {
