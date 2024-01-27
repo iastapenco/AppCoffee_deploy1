@@ -108,13 +108,13 @@ sessionRouter.post(
   }
 );
 
-sessionRouter.post("/logout/:id", async (req, res) => {
-  const { id } = req.params;
+sessionRouter.post("/logout", async (req, res) => {
+  //const { id } = req.params;
   if (req.session) {
     req.session.destroy(function (err) {
       if (err) console.log(err);
     });
-    const user = await userModel.findById(id);
+    const user = await userModel.findById(req.user._id);
     if (!user) {
       return res.status(404).send("Usuario no encontrado");
     }
