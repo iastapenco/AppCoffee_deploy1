@@ -41,12 +41,18 @@ sessionRouter.post(
         email: req.user.email,
       };
 
+      req.login(req.user, function (err) {
+        if (err) {
+          console.log(err);
+        }
+      });
+
       const token = generateToken(req.user);
       res.cookie("jwtCookie", token, {
         maxAge: 43200000,
         sameSite: "none",
         domain: "coffeeshoponline.onrender.com",
-        secure: true,
+        secure: false,
       });
 
       res.status(200).send({ payload: req.user, token });
