@@ -39,7 +39,6 @@ sessionRouter.post(
         last_name: req.user.last_name,
         age: req.user.age,
         email: req.user.email,
-        _id: req.user._id,
       };
 
       const token = generateToken(req.user);
@@ -111,7 +110,7 @@ sessionRouter.post(
 
 sessionRouter.post("/logout", async (req, res) => {
   if (req.session) {
-    const user = await userModel.findById(req.session.user._id);
+    const user = await userModel.findById(req.user._id);
     if (!user) {
       return res.status(404).send("Usuario no encontrado");
     }
