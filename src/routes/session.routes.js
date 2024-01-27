@@ -41,12 +41,6 @@ sessionRouter.post(
         email: req.user.email,
       };
 
-      req.login(req.user, function (err) {
-        if (err) {
-          console.log(err);
-        }
-      });
-
       const token = generateToken(req.user);
       res.cookie("jwtCookie", token, {
         maxAge: 43200000,
