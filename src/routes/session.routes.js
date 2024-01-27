@@ -38,8 +38,6 @@ sessionRouter.post(
       const token = generateToken(req.user);
       res.cookie("jwtCookie", token, {
         maxAge: 43200000,
-        domain: "coffeeshoponline.onrender.com/",
-        sameSite: "none",
       });
 
       res.status(200).send({ payload: req.user });
