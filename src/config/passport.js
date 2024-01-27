@@ -29,12 +29,7 @@ const initalizePassport = () => {
       },
       async (jwt_payload, done) => {
         try {
-          const user = await userModel.findById(jwt_payload.user._id);
-
-          if (!user) {
-            return done(new Error("Usuario no encontrado"), null);
-          }
-          return done(null, user);
+          return done(null, jwt_payload);
         } catch (error) {
           return done(error);
         }
