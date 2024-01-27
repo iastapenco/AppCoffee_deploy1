@@ -45,7 +45,7 @@ sessionRouter.post(
       res.cookie("jwtCookie", token, {
         maxAge: 43200000,
         sameSite: "none",
-        domain: "coffeeshoponline.onrender.com",
+        domain: ".coffeeshoponline.onrender.com",
         secure: true,
       });
 
@@ -109,6 +109,7 @@ sessionRouter.post(
 );
 
 sessionRouter.post("/logout", async (req, res) => {
+  console.log(req.user._id);
   //const { id } = req.params;
   if (req.session) {
     req.session.destroy(function (err) {
