@@ -117,6 +117,7 @@ sessionRouter.post(
 sessionRouter.post("/logout/:id", async (req, res) => {
   const { id } = req.params;
   if (req.session) {
+    req.session.destroy();
     const user = await userModel.findById(id);
     if (!user) {
       return res.status(404).send("Usuario no encontrado");
@@ -124,7 +125,7 @@ sessionRouter.post("/logout/:id", async (req, res) => {
 
     user.last_connection = Date.now();
     await user.save();
-    req.session.destroy();
+
     res.clearCookie("jwtCookie");
     res.status(200).send({ resultado: "Usuario deslogueado" });
   } else {
