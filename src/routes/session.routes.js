@@ -46,7 +46,7 @@ sessionRouter.post(
         maxAge: 43200000,
       });
 
-      res.status(200).send({ payload: req.user });
+      res.status(200).send({ payload: req.user, token });
     } catch (error) {
       return res
         .status(500)
