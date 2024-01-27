@@ -40,7 +40,6 @@ sessionRouter.post(
         maxAge: 43200000,
         domain: "coffeeshoponline.onrender.com/",
         sameSite: "none",
-        secure: true,
       });
 
       res.status(200).send({ payload: req.user });
