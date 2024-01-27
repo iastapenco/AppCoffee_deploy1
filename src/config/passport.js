@@ -135,7 +135,7 @@ const initalizePassport = () => {
   });
 
   passport.deserializeUser(async (id, done) => {
-    const user = userModel.findById(id);
+    const user = await userModel.findById(id);
     done(null, user);
   });
 };
