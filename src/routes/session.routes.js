@@ -17,6 +17,12 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
+sessionRouter.get("/login", async (req, res) => {
+  res.render("login", {
+    js: "session.js",
+  });
+});
+
 sessionRouter.post(
   "/login",
   passport.authenticate("login"),
@@ -99,8 +105,8 @@ sessionRouter.post(
   }
 );
 
-sessionRouter.post("/logout", async (req, res) => {
-  if (req.session && req.session.passport && req.session.passport.user) {
+sessionRouter.get("/logout", async (req, res) => {
+  if (req.session.user) {
     const user = await userModel.findById(req.session.passport.user);
     if (!user) {
       return res.status(404).send("Usuario no encontrado");
@@ -108,7 +114,6 @@ sessionRouter.post("/logout", async (req, res) => {
 
     user.last_connection = Date.now();
     await user.save();
-
     req.session.destroy();
     res.clearCookie("jwtCookie");
     res.status(200).send({ resultado: "Usuario deslogueado" });
