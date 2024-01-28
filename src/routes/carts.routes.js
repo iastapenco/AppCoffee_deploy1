@@ -50,8 +50,8 @@ cartRouter.post("/", async (req, res) => {
 //Agregar un producto al carrito, dados sus respectivos ids
 cartRouter.post(
   "/:cid/products/:pid",
-  passportError("jwt"),
-  authorization("user"),
+  // passportError("jwt"),
+  // authorization("user"),
   async (req, res) => {
     const { cid, pid } = req.params;
     const { quantity } = req.body;
