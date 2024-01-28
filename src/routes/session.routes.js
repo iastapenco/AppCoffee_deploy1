@@ -109,8 +109,6 @@ sessionRouter.post(
 );
 
 sessionRouter.post("/logout", async (req, res) => {
-  console.log(req.user._id);
-  //const { id } = req.params;
   if (req.session) {
     req.session.destroy(function (err) {
       if (err) console.log(err);
