@@ -94,6 +94,23 @@ app.use(
   })
 );
 
+app.use((req, res, next) => {
+  res.header(
+    "Access-Control-Allow-Origin",
+    "https://coffeeshoponline.onrender.com"
+  );
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept, Authorization"
+  );
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+  if (req.method === "OPTIONS") {
+    res.sendStatus(200);
+  } else {
+    next();
+  }
+});
+
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser(process.env.SIGNED_COOKIES));
 app.use(
