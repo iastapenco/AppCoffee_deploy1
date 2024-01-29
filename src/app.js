@@ -86,13 +86,11 @@ const specs = swaggerJSDoc(swaggerOptions);
 
 app.use(express.json());
 app.use(
-  cors()
-
-  //   origin: "*",
-  //   credentials: true,
-  //   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  //   allowedHeaders: ["Content-Type", "Authorization"],
-  // }
+  cors({
+    origin: "https://coffeeshoponline.onrender.com/",
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  })
 );
 
 // app.use((req, res, next) => {
