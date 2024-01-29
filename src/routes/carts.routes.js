@@ -48,33 +48,32 @@ cartRouter.post("/", async (req, res) => {
 });
 
 //Agregar un producto al carrito, dados sus respectivos ids
-cartRouter.post(
-  "/:cid/products/:pid",
-  // passportError("jwt"),
-  // authorization("user"),
-  async (req, res) => {
-    const { cid, pid } = req.params;
-    const { quantity } = req.body;
+cartRouter.post("/:cid/products/:pid", async (req, res) => {
+  const { cid, pid } = req.params;
+  const { quantity } = req.body;
 
-    try {
-      const respuesta = await cartManager.addProductToCart(cid, pid, quantity);
-      if (respuesta) {
-        res.status(200).send({ respuesta: "OK", mensaje: respuesta });
-      } else {
-        res.status(404).send({
-          respuesta: "Error en agregar producto Carrito",
-          mensaje: "Cart Not Found",
-        });
-      }
-    } catch (error) {
-      console.log(error);
-      res.status(400).send({
+  try {
+    const respuesta = await cartManager.addProductToCart(cid, pid, quantity);
+    if (respuesta) {
+      res.header(
+        "Access-Control-Allow-Origin",
+        "https://coffeeshoponline.onrender.com/"
+      );
+      res.status(200).send({ respuesta: "OK", mensaje: respuesta });
+    } else {
+      res.status(404).send({
         respuesta: "Error en agregar producto Carrito",
-        mensaje: error,
+        mensaje: "Cart Not Found",
       });
     }
+  } catch (error) {
+    console.log(error);
+    res.status(400).send({
+      respuesta: "Error en agregar producto Carrito",
+      mensaje: error,
+    });
   }
-);
+});
 
 //Actualizar el carrito según un producto
 cartRouter.put("/:cid/products/:pid", async (req, res) => {
