@@ -22,7 +22,7 @@ cartRouter.get("/:id", async (req, res) => {
 
   try {
     const cart = await cartManager.getCartById(id);
-    if (cart) res.render("cart", { cart });
+    if (cart) res.status(200).send(cart);
     else
       res.status(404).send({
         respuesta: "Error en consultar Carrito",
@@ -48,114 +48,139 @@ cartRouter.post("/", async (req, res) => {
 });
 
 //Agregar un producto al carrito, dados sus respectivos ids
-cartRouter.post("/:cid/products/:pid", async (req, res) => {
-  const { cid, pid } = req.params;
-  const { quantity } = req.body;
-
-  try {
-    const respuesta = await cartManager.addProductToCart(cid, pid, quantity);
-    if (respuesta) {
-      res.header(
-        "Access-Control-Allow-Origin",
-        "https://coffeeshoponline.onrender.com/"
-      );
-      res.status(200).send({ respuesta: "OK", mensaje: respuesta });
-    } else {
-      res.status(404).send({
-        respuesta: "Error en agregar producto Carrito",
-        mensaje: "Cart Not Found",
-      });
-    }
-  } catch (error) {
-    console.log(error);
-    res.status(400).send({
-      respuesta: "Error en agregar producto Carrito",
-      mensaje: error,
-    });
-  }
-});
-
-//Actualizar el carrito según un producto
-cartRouter.put("/:cid/products/:pid", async (req, res) => {
-  try {
+cartRouter.post(
+  "/:cid/products/:pid",
+  passportError("jwt"),
+  authorization("user"),
+  async (req, res) => {
     const { cid, pid } = req.params;
     const { quantity } = req.body;
-    const cart = await cartManager.updateCart(cid, pid, quantity);
-    if (!cart) {
-      return res.status(404).send({ message: "No se encontró el carrito" });
+
+    try {
+      const respuesta = await cartManager.addProductToCart(cid, pid, quantity);
+      if (respuesta) {
+        res.status(200).send({ respuesta: "OK", mensaje: respuesta });
+      } else {
+        res.status(404).send({
+          respuesta: "Error en agregar producto Carrito",
+          mensaje: "Cart Not Found",
+        });
+      }
+    } catch (error) {
+      console.log(error);
+      res.status(400).send({
+        respuesta: "Error en agregar producto Carrito",
+        mensaje: error,
+      });
     }
-    res.status(200).send({ message: "Carrito actualizado", respuesta: cart });
-  } catch (error) {
-    res.status(500).send({ message: "Hubo un error al procesar tu solicitud" });
-    console.log(error);
   }
-});
+);
+
+//Actualizar el carrito según un producto
+cartRouter.put(
+  "/:cid/products/:pid",
+  passportError("jwt"),
+  authorization("user"),
+  async (req, res) => {
+    try {
+      const { cid, pid } = req.params;
+      const { quantity } = req.body;
+      const cart = await cartManager.updateCart(cid, pid, quantity);
+      if (!cart) {
+        return res.status(404).send({ message: "No se encontró el carrito" });
+      }
+      res.status(200).send({ message: "Carrito actualizado", respuesta: cart });
+    } catch (error) {
+      res
+        .status(500)
+        .send({ message: "Hubo un error al procesar tu solicitud" });
+      console.log(error);
+    }
+  }
+);
 
 //Eliminar un producto del carrito
-cartRouter.delete("/:cid/products/:pid", async (req, res) => {
-  try {
-    const { cid, pid } = req.params;
+cartRouter.delete(
+  "/:cid/products/:pid",
+  passportError("jwt"),
+  authorization("user"),
+  async (req, res) => {
+    try {
+      const { cid, pid } = req.params;
 
-    const cart = await cartManager.deleteProductOfCart(cid, pid);
-    if (!cart) {
-      return res.status(404).send({ message: "No se encontró el carrito" });
+      const cart = await cartManager.deleteProductOfCart(cid, pid);
+      if (!cart) {
+        return res.status(404).send({ message: "No se encontró el carrito" });
+      }
+      res.status(200).send({ message: "Producto eliminado", respuesta: cart });
+    } catch (error) {
+      res.status(500).send({
+        message: "Hubo un error al procesar tu solicitud",
+        error: error,
+      });
     }
-    res.status(200).send({ message: "Producto eliminado", respuesta: cart });
-  } catch (error) {
-    res.status(500).send({
-      message: "Hubo un error al procesar tu solicitud",
-      error: error,
-    });
   }
-});
+);
 
 //Vacíar el carrito
-cartRouter.delete("/:cid", async (req, res) => {
-  try {
-    const { cid } = req.params;
+cartRouter.delete(
+  "/:cid",
+  passportError("jwt"),
+  authorization("user"),
+  async (req, res) => {
+    try {
+      const { cid } = req.params;
 
-    const cart = await cartManager.emptyCart(cid);
-    if (!cart) {
-      return res.status(404).send({ message: "No se encontró el carrito" });
+      const cart = await cartManager.emptyCart(cid);
+      if (!cart) {
+        return res.status(404).send({ message: "No se encontró el carrito" });
+      }
+      res
+        .status(200)
+        .send({ message: "El carrito está vacío", respuesta: cart });
+    } catch (error) {
+      res.status(500).send({
+        message: "Hubo un error al procesar tu solicitud",
+        error: error,
+      });
     }
-    res.status(200).send({ message: "El carrito está vacío", respuesta: cart });
-  } catch (error) {
-    res.status(500).send({
-      message: "Hubo un error al procesar tu solicitud",
-      error: error,
-    });
   }
-});
+);
 
 //Actualizar un carrito, devolviendo los documentos y la paginación correspondiente
-cartRouter.put("/:cid", async (req, res) => {
-  const { cid } = req.params;
-  const { id_prod, quantity } = req.body;
-  const updateProduct = { pid: id_prod, quantity: quantity };
-  try {
-    const options = {
-      page: 1,
-      limit: 10,
-    };
+cartRouter.put(
+  "/:cid",
+  passportError("jwt"),
+  authorization("user"),
+  async (req, res) => {
+    const { cid } = req.params;
+    const { id_prod, quantity } = req.body;
+    const updateProduct = { pid: id_prod, quantity: quantity };
+    try {
+      const options = {
+        page: 1,
+        limit: 10,
+      };
 
-    const resultados = await cartManager.updateCartPaginate(
-      cid,
-      updateProduct,
-      options
-    );
+      const resultados = await cartManager.updateCartPaginate(
+        cid,
+        updateProduct,
+        options
+      );
 
-    if (!resultados) {
-      return res
-        .status(404)
-        .send({ message: "error", respuesta: "Carrito no encontrado" });
+      if (!resultados) {
+        return res
+          .status(404)
+          .send({ message: "error", respuesta: "Carrito no encontrado" });
+      }
+      res
+        .status(200)
+        .send({ message: "Carrito actualizado", respuesta: resultados });
+    } catch (error) {
+      res.status(500).send({ message: "error", respuesta: error });
     }
-    res
-      .status(200)
-      .send({ message: "Carrito actualizado", respuesta: resultados });
-  } catch (error) {
-    res.status(500).send({ message: "error", respuesta: error });
   }
-});
+);
 
 cartRouter.post(
   "/:cid/purchase",

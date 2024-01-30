@@ -23,18 +23,6 @@ import { addLogger } from "./config/logger.js";
 import swaggerJSDoc from "swagger-jsdoc";
 import swaggerUiExpress from "swagger-ui-express";
 
-//const whiteList = ["https://coffeeshoponline.onrender.com"];
-
-// const corsOptions = {
-//   origin: function (origin, callback) {
-//     if (whiteList.indexOf(origin) != -1 || !origin) {
-//       callback(null, true);
-//     } else {
-//       callback(new Error("Acceso denegado"));
-//     }
-//   },
-// };
-
 const PORT = 8080;
 const app = express();
 app.use(addLogger);
@@ -92,21 +80,6 @@ app.use(
     allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
-
-// app.use((req, res, next) => {
-//   res.header("Access-Control-Allow-Origin", "*");
-//   res.header(
-//     "Access-Control-Allow-Headers",
-//     "Origin, X-Requested-With, Content-Type, Accept, Authorization"
-//   );
-//   res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-//   if (req.method === "OPTIONS") {
-//     res.sendStatus(200);
-//   } else {
-//     next();
-//   }
-// });
-
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser(process.env.SIGNED_COOKIES));
 app.use(
@@ -117,7 +90,7 @@ app.use(
         useNewUrlParser: true,
         useUnifiedTopology: true,
       },
-      ttl: 300,
+      ttl: 86400,
     }),
     secret: process.env.SESSION_SECRET,
     resave: false,
@@ -129,7 +102,10 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 const upload = multer({ storage: storage });
-app.use("/static", express.static(path.join(__dirname, "/public")));
+const buildPath = path.join(__dirname, "../client/dist");
+
+app.use(express.static(buildPath));
+
 const io = new Server(server);
 
 io.on("connection", (socket) => {
@@ -189,4 +165,8 @@ app.post("/upload", upload.single("product"), (req, res) => {
   console.log(req.file);
   console.log(req.body);
   res.status(200).send("Imagen cargada");
+});
+
+app.get("*", (req, res) => {
+  res.sendFile(path.join(buildPath, "/index.html"));
 });

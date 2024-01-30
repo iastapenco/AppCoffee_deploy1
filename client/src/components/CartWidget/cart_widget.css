@@ -1,0 +1,17 @@
+.carrito {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    margin-right: 150px;
+    margin-top: 75px;
+}
+
+.number {
+    padding: 5px;
+    border: 1px solid white;
+    border-radius: 50%;
+    color: white;
+    background-color: rgb(77, 77, 182);
+    
+}
