@@ -13,7 +13,7 @@ export const Login = () => {
     const datForm = new FormData(formRef.current);
     const data = Object.fromEntries(datForm);
 
-    const response = await fetch("http://localhost:8080/api/sessions/login", {
+    const response = await fetch("/api/sessions/login", {
       method: "POST",
       headers: {
         "Content-type": "application/json",
