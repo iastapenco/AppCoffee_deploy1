@@ -12,7 +12,8 @@ const AddCart = ({ data }) => {
     const datForm = new FormData(formRef.current);
     const dataForm = Object.fromEntries(datForm);
     const quantity = Number(dataForm.quantity);
-    setCart(quantity);
+
+    setCart({ ...cart, quantity: quantity });
 
     const response = await fetch(
       `/api/carts/${dataUser.cart}/products/${_id}`,
@@ -24,10 +25,8 @@ const AddCart = ({ data }) => {
         body: JSON.stringify({ quantity }),
       }
     );
-    console.log("response:", response);
 
     if (response.status == 200) {
-      console.log("Producto agregado al carrito");
       return alert("Producto agregado al carrito");
     }
   };
@@ -42,6 +41,7 @@ const AddCart = ({ data }) => {
         defaultValue={1}
         name="quantity"
         autocomplete="off"
+        min="1"
       />
       <button type="submit" class="btn btn-primary mt-3">
         Agregar al carrito

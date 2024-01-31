@@ -4,6 +4,7 @@ import CartItems from "../CartItems/CartItems";
 import TotalAMount from "../TotalAmount/TotalAMount";
 import { Link } from "react-router-dom";
 import FinishPurchase from "../FinishPurcahse/FinishPurchase";
+import EmptyCart from "../EmptyCart/EmptyCart";
 
 const ShoppingCart = () => {
   const [cart, setCart] = useContext(CartContext);
@@ -53,6 +54,7 @@ const ShoppingCart = () => {
         <CartItems />
         <TotalAMount />
         <FinishPurchase />
+        <EmptyCart />
       </div>
     </>
   );

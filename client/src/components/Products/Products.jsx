@@ -20,7 +20,7 @@ const Products = () => {
         <CartWidget />
       </div>
       <div>
-        <h2 className="center">Lista de productos</h2>
+        <h2 className="d-flex">Lista de productos</h2>
       </div>
       <div className="container row-gap-3 column-gap-3 d-flex flex-row justify-content-around align-content-around flex-wrap bg-primary mb-4">
         {products &&

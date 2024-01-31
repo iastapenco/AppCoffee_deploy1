@@ -6,7 +6,7 @@ import "./cart_widget.css";
 
 const CartWidget = () => {
   const [cart] = useContext(CartContext);
-  let [quantity, setQuantity] = useState(0);
+  let [quantity, setQuantity] = useState(cart.quantity);
 
   useEffect(() => {
     setQuantity(cart.quantity);

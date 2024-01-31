@@ -40,7 +40,7 @@ const FinishPurchase = () => {
   return (
     <div>
       <button
-        className="bg-danger"
+        className="btn btn-success"
         type="submit"
         onClick={() => {
           onSubmit();
