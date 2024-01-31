@@ -1,11 +1,15 @@
 {
   "name": "proyecto_final_astapenco_backend",
   "version": "1.0.0",
+  "engines": {
+    "npm": "10.2.3",
+    "node": "20.10.0"
+  },
   "description": "",
   "type": "module",
   "main": "app.js",
   "scripts": {
-    "dev": "node src/app.js",
+    "start": "node src/app.js",
     "test": "mocha test/User.test.js",
     "testChai": "mocha test/UserChai.test.js",
     "supertest": "mocha test/supertest.test.js"
