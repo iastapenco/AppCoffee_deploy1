@@ -11,7 +11,10 @@ const DeleteProduct = ({ data }) => {
       (item) => item.id_prod._id !== pid
     );
 
-    setCart({ ...cart, products: updatedProducts });
+    const totalQuantity = updatedProducts.reduce(
+      (total, product) => total + product.quantity,
+      0
+    );
 
     const response = await fetch(`/api/carts/${cid}/products/${pid}`, {
       method: "DELETE",
@@ -21,6 +24,7 @@ const DeleteProduct = ({ data }) => {
     });
 
     if (response.ok) {
+      setCart({ ...cart, products: updatedProducts, quantity: totalQuantity });
       return alert("Se elimino el producto del carrito");
     }
   };
