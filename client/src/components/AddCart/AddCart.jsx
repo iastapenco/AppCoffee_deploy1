@@ -13,6 +13,8 @@ const AddCart = ({ data }) => {
     const dataForm = Object.fromEntries(datForm);
     const quantity = Number(dataForm.quantity);
 
+    setCart({ ...cart, quantity: quantity });
+
     const response = await fetch(
       `/api/carts/${dataUser.cart}/products/${_id}`,
       {
@@ -23,14 +25,9 @@ const AddCart = ({ data }) => {
         body: JSON.stringify({ quantity }),
       }
     );
+
     if (response.status == 200) {
-      const data = await response.json();
-      setCart((prevCart) => ({
-        ...prevCart,
-        products: data.mensaje.products,
-        quantity: prevCart.quantity + quantity,
-      }));
-      alert("Producto agregado al carrito");
+      return alert("Producto agregado al carrito");
     }
   };
 

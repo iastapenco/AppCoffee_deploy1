@@ -2,43 +2,20 @@ import React, { useContext, useEffect, useState } from "react";
 import { CartContext } from "../../Context/CartContext";
 
 const TotalAMount = () => {
-  const [cart, setCart] = useContext(CartContext);
+  const [cart] = useContext(CartContext);
   const [totalAmount, setTotalAmount] = useState(0);
   const dataUser = JSON.parse(localStorage.getItem("dataUser"));
   const user_premium = dataUser ? dataUser.user_premium : false;
 
   useEffect(() => {
-    const fetchCart = async () => {
-      const response = await fetch(`/api/carts/${dataUser.cart}`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      const data = await response.json();
-      //setCart(data);
-      if (data && data.products) {
-        const total = data.products.reduce(
-          (total, product) => total + product.id_prod.price * product.quantity,
-          0
-        );
-        setTotalAmount(total);
-      }
-    };
-    if (dataUser) {
-      fetchCart();
+    if (cart && cart.products) {
+      const total = cart.products.reduce(
+        (total, product) => total + product.id_prod.price,
+        0
+      );
+      setTotalAmount(total);
     }
   }, [cart]);
-
-  // useEffect(() => {
-  //   if (cart && cart.products) {
-  //     const total = cart.products.reduce(
-  //       (total, product) => total + product.id_prod.price * product.quantity,
-  //       0
-  //     );
-  //     setTotalAmount(total);
-  //   }
-  // }, [cart]);
 
   return (
     <div d-flex flex-column gap-3 justify-content-center>

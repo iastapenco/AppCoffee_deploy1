@@ -6,7 +6,7 @@ const EmptyCart = () => {
   const cid = cart._id;
 
   const submit = async () => {
-    const emptyCart = { ...cart, products: [], quantity: 0 };
+    const emptyCart = { ...cart, products: [] };
     setCart(emptyCart);
 
     const response = await fetch(`/api/carts/${cid}`, {

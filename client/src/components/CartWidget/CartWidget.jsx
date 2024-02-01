@@ -7,6 +7,7 @@ import "./cart_widget.css";
 const CartWidget = () => {
   const [cart] = useContext(CartContext);
   let [quantity, setQuantity] = useState(cart.quantity);
+
   useEffect(() => {
     setQuantity(cart.quantity);
   }, [cart.quantity]);
@@ -15,7 +16,7 @@ const CartWidget = () => {
     <Link to={"/cart"} style={{ textDecoration: "none" }}>
       <div className="carrito">
         <ShoppingCartIcon sx={{ fontSize: "200%" }} />
-        <p className="number">{quantity ? quantity : 0}</p>
+        <p className="number">{quantity}</p>
       </div>
     </Link>
   );

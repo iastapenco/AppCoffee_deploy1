@@ -7,7 +7,31 @@ import FinishPurchase from "../FinishPurcahse/FinishPurchase";
 import EmptyCart from "../EmptyCart/EmptyCart";
 
 const ShoppingCart = () => {
-  const [cart] = useContext(CartContext);
+  const [cart, setCart] = useContext(CartContext);
+  const dataUser = JSON.parse(localStorage.getItem("dataUser"));
+  const cid = dataUser.cart;
+
+  useEffect(() => {
+    const fetchCart = async () => {
+      const response = await fetch(`/api/carts/${cid}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const data = await response.json();
+      let quantity = 0;
+      if (data && data.products) {
+        quantity = data.products.reduce(
+          (total, product) => total + product.quantity,
+          0
+        );
+      }
+      setCart({ ...data, quantity: quantity });
+    };
+
+    fetchCart();
+  }, []);
 
   return (
     <>
