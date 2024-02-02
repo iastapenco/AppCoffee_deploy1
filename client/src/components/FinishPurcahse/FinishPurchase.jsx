@@ -3,7 +3,7 @@ import { CartContext } from "../../Context/CartContext";
 import Swal from "sweetalert2";
 
 const FinishPurchase = () => {
-  const [cart] = useContext(CartContext);
+  const [cart, setCart] = useContext(CartContext);
   const _id = cart._id;
 
   const MessageSuccess = () => {
@@ -31,6 +31,7 @@ const FinishPurchase = () => {
       },
     });
     if (response.ok) {
+      setCart({ ...cart, products: [], quantity: 0 });
       MessageSuccess();
     } else {
       alert("Error al finalizar compra");

@@ -1,11 +1,12 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { CartContext } from "../../Context/CartContext";
 import CardCartItems from "../CardCartItems/CardCartItems";
 import UpdateCart from "../UpdateCart/UpdateCart";
 import DeleteProduct from "../DeleteProduct/DeleteProduct";
 
 const CartItems = () => {
-  const [cart, setCart] = useContext(CartContext);
+  const [cart] = useContext(CartContext);
+
   return (
     <div className="container d-flex flex-column">
       {cart &&

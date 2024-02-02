@@ -1,4 +1,4 @@
-import { useRef, useContext } from "react";
+import { useRef, useContext, useEffect } from "react";
 import { CartContext } from "../../Context/CartContext";
 
 const AddCart = ({ data }) => {
@@ -13,8 +13,6 @@ const AddCart = ({ data }) => {
     const dataForm = Object.fromEntries(datForm);
     const quantity = Number(dataForm.quantity);
 
-    setCart({ ...cart, quantity: quantity });
-
     const response = await fetch(
       `/api/carts/${dataUser.cart}/products/${_id}`,
       {
@@ -27,6 +25,22 @@ const AddCart = ({ data }) => {
     );
 
     if (response.status == 200) {
+      const respuesta = await response.json();
+      const updatedProducts = respuesta.mensaje.products.map((prod) =>
+        prod.id_prod._id == _id ? { ...prod, quantity } : prod
+      );
+
+      const updatedQuantity = updatedProducts.reduce(
+        (total, prod) => total + prod.quantity,
+        0
+      );
+
+      setCart({
+        ...cart,
+        products: updatedProducts,
+        quantity: updatedQuantity,
+      });
+      console.log(cart);
       return alert("Producto agregado al carrito");
     }
   };

@@ -1,10 +1,17 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import CardProducts from "../CardProducts/CardProducts";
 import CartWidget from "../CartWidget/CartWidget";
 import AddCart from "../AddCart/AddCart";
+import { CartContext } from "../../Context/CartContext";
 
 const Products = () => {
   const [products, setProducts] = useState(null);
+  const [cart, setCart] = useContext(CartContext);
+  const dataUser = JSON.parse(localStorage.getItem("dataUser"));
+  let cid;
+  if (dataUser) {
+    cid = dataUser.cart;
+  }
 
   useEffect(() => {
     fetch("/api/products")
@@ -13,6 +20,30 @@ const Products = () => {
         setProducts(data);
       });
   }, []);
+
+  useEffect(() => {
+    const fetchCart = async () => {
+      const response = await fetch(`/api/carts/${cid}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const data = await response.json();
+      let quantity = 0;
+      if (data && data.products) {
+        quantity = data.products.reduce(
+          (total, product) => total + product.quantity,
+          0
+        );
+      }
+      setCart({ ...data, products: data.products, quantity: quantity });
+    };
+
+    if (dataUser) {
+      fetchCart();
+    }
+  }, [cart.quantity]);
 
   return (
     <>

@@ -10,7 +10,7 @@ const TotalAMount = () => {
   useEffect(() => {
     if (cart && cart.products) {
       const total = cart.products.reduce(
-        (total, product) => total + product.id_prod.price,
+        (total, product) => total + product.quantity * product.id_prod.price,
         0
       );
       setTotalAmount(total);
@@ -21,7 +21,7 @@ const TotalAMount = () => {
     <div d-flex flex-column gap-3 justify-content-center>
       {user_premium ? (
         <h2 className=" text-center text-bg-success">
-          Monto total ${0.9 * totalAmount}{" "}
+          Monto total ${0.9 * totalAmount}
         </h2>
       ) : (
         <h2 className="text-center text-bg-success">

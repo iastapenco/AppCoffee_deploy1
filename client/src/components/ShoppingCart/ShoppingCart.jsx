@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect } from "react";
 import { CartContext } from "../../Context/CartContext";
 import CartItems from "../CartItems/CartItems";
 import TotalAMount from "../TotalAmount/TotalAMount";
@@ -7,31 +7,7 @@ import FinishPurchase from "../FinishPurcahse/FinishPurchase";
 import EmptyCart from "../EmptyCart/EmptyCart";
 
 const ShoppingCart = () => {
-  const [cart, setCart] = useContext(CartContext);
-  const dataUser = JSON.parse(localStorage.getItem("dataUser"));
-  const cid = dataUser.cart;
-
-  useEffect(() => {
-    const fetchCart = async () => {
-      const response = await fetch(`/api/carts/${cid}`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      const data = await response.json();
-      let quantity = 0;
-      if (data && data.products) {
-        quantity = data.products.reduce(
-          (total, product) => total + product.quantity,
-          0
-        );
-      }
-      setCart({ ...data, quantity: quantity });
-    };
-
-    fetchCart();
-  }, []);
+  const [cart] = useContext(CartContext);
 
   return (
     <>

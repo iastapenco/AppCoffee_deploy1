@@ -11,7 +11,12 @@ const DeleteProduct = ({ data }) => {
       (item) => item.id_prod._id !== pid
     );
 
-    setCart({ ...cart, products: updatedProducts });
+    const totalQuantity = updatedProducts.reduce(
+      (total, prod) => total + prod.id_prod.price,
+      0
+    );
+
+    setCart({ ...cart, products: updatedProducts, quantity: totalQuantity });
 
     const response = await fetch(`/api/carts/${cid}/products/${pid}`, {
       method: "DELETE",
