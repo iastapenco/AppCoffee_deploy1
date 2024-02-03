@@ -1,4 +1,4 @@
-import { useRef, useContext, useEffect } from "react";
+import { useRef, useContext } from "react";
 import { CartContext } from "../../Context/CartContext";
 
 const AddCart = ({ data }) => {
@@ -13,35 +13,37 @@ const AddCart = ({ data }) => {
     const dataForm = Object.fromEntries(datForm);
     const quantity = Number(dataForm.quantity);
 
-    const response = await fetch(
-      `/api/carts/${dataUser.cart}/products/${_id}`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ quantity }),
+    if (dataUser) {
+      const response = await fetch(
+        `/api/carts/${dataUser.cart}/products/${_id}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ quantity }),
+        }
+      );
+
+      if (response.status == 200) {
+        const respuesta = await response.json();
+        const updatedProducts = respuesta.mensaje.products.map((prod) =>
+          prod.id_prod._id == _id ? { ...prod, quantity } : prod
+        );
+
+        const updatedQuantity = updatedProducts.reduce(
+          (total, prod) => total + prod.quantity,
+          0
+        );
+
+        setCart({
+          ...cart,
+          products: updatedProducts,
+          quantity: updatedQuantity,
+        });
+        return alert("Producto agregado al carrito");
       }
-    );
-
-    if (response.status == 200) {
-      const respuesta = await response.json();
-      const updatedProducts = respuesta.mensaje.products.map((prod) =>
-        prod.id_prod._id == _id ? { ...prod, quantity } : prod
-      );
-
-      const updatedQuantity = updatedProducts.reduce(
-        (total, prod) => total + prod.quantity,
-        0
-      );
-
-      setCart({
-        ...cart,
-        products: updatedProducts,
-        quantity: updatedQuantity,
-      });
-      return alert("Producto agregado al carrito");
-    }
+    } else alert("Inicie sesión para agregar productos al carrito");
   };
 
   return (
