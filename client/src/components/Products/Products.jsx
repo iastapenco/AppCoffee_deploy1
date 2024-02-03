@@ -51,15 +51,18 @@ const Products = () => {
         <CartWidget />
       </div>
       <div>
-        <h2 className="d-flex">Lista de productos</h2>
+        <h2 className="d-flex justify-content-center">Lista de productos</h2>
       </div>
-      <div className="container row-gap-3 column-gap-3 d-flex flex-row justify-content-around align-content-around flex-wrap bg-primary mb-4">
+      <div className="container w-50 mx-auto row-gap-3 column-gap-3 d-flex flex-column justify-content-around align-content-around flex-wrap bg-primary mb-4">
         {products &&
           products.mensaje &&
           products.mensaje.docs &&
           products.mensaje.docs.map((product) => {
             return (
-              <div key={product._id} className="product_container ">
+              <div
+                key={product._id}
+                className="product_container align-self-center "
+              >
                 <div className="card d-flex flex-column">
                   <CardProducts data={product} />
                   <AddCart data={product} />

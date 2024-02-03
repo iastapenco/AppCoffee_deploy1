@@ -87,8 +87,16 @@ productRouter.put(
   authorization("admin"),
   async (req, res) => {
     const { id } = req.params;
-    const { title, description, stock, status, code, price, category } =
-      req.body;
+    const {
+      title,
+      description,
+      stock,
+      status,
+      code,
+      price,
+      category,
+      thumbnails,
+    } = req.body;
 
     try {
       const prod = await productManager.updateProduct(
@@ -99,7 +107,8 @@ productRouter.put(
         status,
         code,
         price,
-        category
+        category,
+        thumbnails
       );
       if (prod)
         res

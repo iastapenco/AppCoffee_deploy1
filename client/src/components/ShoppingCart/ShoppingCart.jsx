@@ -34,7 +34,7 @@ const ShoppingCart = () => {
         </button>
       </div>
       <div className="container-fluid d-flex flex-column justify-content-center gap-3">
-        <h3 className="center">
+        <h3 className="align-self-center">
           Total de productos en el carrito:
           {cart && cart.quantity ? cart.quantity : 0}
         </h3>

@@ -35,7 +35,8 @@ class ProductManager {
     status,
     code,
     price,
-    category
+    category,
+    thumbnails
   ) {
     const prod = await productModel.findByIdAndUpdate(id, {
       title,
@@ -45,6 +46,7 @@ class ProductManager {
       code,
       price,
       category,
+      thumbnails,
     });
     return prod;
   }
