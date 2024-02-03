@@ -22,9 +22,13 @@ const EmptyCart = () => {
   };
 
   return (
-    <button type="submit" class="btn btn-danger mt-3" onClick={submit}>
-      Vaciar carrito
-    </button>
+    <div>
+      {cart.length !== 0 ? (
+        <button type="submit" class="btn btn-danger mt-3" onClick={submit}>
+          Vaciar carrito
+        </button>
+      ) : null}
+    </div>
   );
 };
 

@@ -40,15 +40,17 @@ const FinishPurchase = () => {
 
   return (
     <div>
-      <button
-        className="btn btn-success"
-        type="submit"
-        onClick={() => {
-          onSubmit();
-        }}
-      >
-        Finalizar compra
-      </button>
+      {cart.length !== 0 ? (
+        <button
+          className="btn btn-success"
+          type="submit"
+          onClick={() => {
+            onSubmit();
+          }}
+        >
+          Finalizar compra
+        </button>
+      ) : null}
     </div>
   );
 };
