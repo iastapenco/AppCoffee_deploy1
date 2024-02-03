@@ -23,7 +23,7 @@ const EmptyCart = () => {
 
   return (
     <div>
-      {cart.length !== 0 ? (
+      {cart && cart.quantity > 0 ? (
         <button type="submit" class="btn btn-danger mt-3" onClick={submit}>
           Vaciar carrito
         </button>

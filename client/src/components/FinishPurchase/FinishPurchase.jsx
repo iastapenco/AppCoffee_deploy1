@@ -40,7 +40,7 @@ const FinishPurchase = () => {
 
   return (
     <div>
-      {cart.length !== 0 ? (
+      {cart && cart.quantity > 0 ? (
         <button
           className="btn btn-success"
           type="submit"

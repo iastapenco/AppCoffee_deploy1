@@ -40,7 +40,6 @@ const AddCart = ({ data }) => {
         products: updatedProducts,
         quantity: updatedQuantity,
       });
-      console.log(cart);
       return alert("Producto agregado al carrito");
     }
   };

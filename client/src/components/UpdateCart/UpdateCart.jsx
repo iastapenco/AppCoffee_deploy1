@@ -17,7 +17,10 @@ const UpdateCart = ({ data }) => {
       item.id_prod._id === pid ? { ...item, quantity } : item
     );
 
-    setCart({ ...cart, products: updatedProducts });
+    const updatedQuantity = updatedProducts.reduce(
+      (total, prod) => total + prod.quantity,
+      0
+    );
 
     const response = await fetch(`/api/carts/${cid}/products/${pid}`, {
       method: "PUT",
@@ -28,6 +31,11 @@ const UpdateCart = ({ data }) => {
     });
 
     if (response.ok) {
+      setCart({
+        ...cart,
+        products: updatedProducts,
+        quantity: updatedQuantity,
+      });
       return alert("Se modificó la cantidad del carrito");
     }
   };
